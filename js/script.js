@@ -22,7 +22,10 @@ function searchMovie() {
                         <div class="card-body">
                             <h5 class="card-title">` + data.Title + `</h5>
                             <p class="card-text">` + data.Year + `</p>
-                            <a href="#" class="card-link">See Details</a>
+                            <a href="#" class="card-link see-detail"
+                            data-toggle="modal" 
+                            data-target="#exampleModal" 
+                            data-id="` + data.imdbID + `" >See Details</a>
                         </div>
                     </div>
                     </div>
@@ -51,4 +54,39 @@ $('#search-input').on('keyup', function (e) {
     if (e.which === 13) {
         searchMovie();
     }
-})
+});
+
+$('#movie-list').on('click','.see-detail', function () {
+    $.ajax({
+        url: 'http://www.omdbapi.com/',
+        type: 'get',
+        dataType: 'json',
+        data: {
+            'apikey' : 'f7ee9825',
+            'i' : $(this).data('id')
+        },
+        success: function (movie) {
+            if (movie.Response == "True" ) {
+                $('.modal-body').html(`
+                    <div class="container-fluid">
+                        <div class="row"> 
+                            <div class="col-md-4">
+                                <img src="` + movie.Poster +`" class="img-fluid"> 
+                            </div>
+
+                            <div class="col-md-8">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><h4>` + movie.Title + `</h4></li>
+                                    <li class="list-group-item">Released : ` + movie.Released + `</li>
+                                    <li class="list-group-item">Genre : ` + movie.Genre + `</li>
+                                    <li class="list-group-item">Director : ` + movie.Director + `</li>
+                                    <li class="list-group-item">Actors : ` + movie.Actors + `</li>    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `)
+            }
+        }
+    });
+});
