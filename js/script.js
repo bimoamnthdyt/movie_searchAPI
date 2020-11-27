@@ -1,4 +1,7 @@
-$('#search-button').on('click', function () {
+function searchMovie() {
+
+    $('#movie-list').html('');
+
     $.ajax({
         url: 'http://www.omdbapi.com/',
         type: 'get',
@@ -17,14 +20,16 @@ $('#search-button').on('click', function () {
                     <div class="card">
                         <img src="` + data.Poster +`" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <h5 class="card-title">` + data.Title + `</h5>
+                            <p class="card-text">` + data.Year + `</p>
+                            <a href="#" class="card-link">See Details</a>
                         </div>
                     </div>
                     </div>
                     `);
                 });
+
+                $('#search-input').val('');
 
             }else{
                 $('#movie-list').html(`
@@ -36,4 +41,14 @@ $('#search-button').on('click', function () {
             }
         }
     });
+}
+
+$('#search-button').on('click', function () {
+    searchMovie();
 });
+
+$('#search-input').on('keyup', function (e) {
+    if (e.which === 13) {
+        searchMovie();
+    }
+})
